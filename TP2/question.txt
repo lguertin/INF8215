@@ -1,0 +1,5 @@
+- pos init de la roche ?
+- true/False dans exp
+- Heuristique part 2.1: state score ?
+- minimax recursif ?
+    - retourne tous les scores d'un niveaux
