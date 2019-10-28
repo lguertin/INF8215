@@ -157,6 +157,10 @@ class MiniMaxSearch:
                 
                 if is_max:
                     self.nb_moves_tot += 1
+                
+                if self.nb_moves_tot == 40:
+                    print('FAIL')
+                    break
             
     def print_move(self, is_max, state):
         #TODO

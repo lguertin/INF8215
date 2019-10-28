@@ -53,7 +53,11 @@ class State:
         return s
             
     def score_state(self, rh, is_max=True, is_single_player=True):
-        self.old_score_state(rh, is_max, is_single_player)
+        # self.old_score_state(rh, is_max, is_single_player)
+        
+        self.score = -(4 - self.pos[0]) # TODO: Give a better score
+
+        
         
         
     def old_score_state(self, rh, is_max=True, is_single_player=True):
