@@ -55,9 +55,88 @@ class State:
     def score_state(self, rh, is_max=True, is_single_player=True):
         # self.old_score_state(rh, is_max, is_single_player)
         
-        self.score = -(4 - self.pos[0]) # TODO: Give a better score
+        dist_red_exit = (4 - self.pos[0]) # TODO: Give a better score
+
+        nb_vert_cars_in_front_red = 0
+        nb_cars_blocking_cars_in_front_red = 0
+        nb_cars_blocked_by_rock = 0
+        car_blocked_by_rock = 0
+        cars_blocking_red_moving = 0
+
+        for car in range(1, rh.nbcars):
+            if not rh.horiz[car] and (rh.move_on[car] >=  self.pos[0] + rh.length[0]): # vertical cars on the right of the red car
+                if self.pos[car] + rh.length[car] > rh.move_on[0]: #2: # crosses the red car # TODO: the exit/red car is always on row = 2 ??
+                    nb_vert_cars_in_front_red += 1
+
+                     # better score if the blocking car is moving:  down if len == 3, up or down if len == 2
+                    if self.c == car:
+                        if (rh.length[car] == 3 and self.d == 1): # or rh.length[car] == 2:
+                            cars_blocking_red_moving += 1
+                            print('SCORE self.c: ', self.c)
+                    # else:
+
+                    nb_cars_blocking_cars_in_front_red += self.nb_cars_blocking(rh, car)
+
+                    # car_blocked_by_rock += self.rock_blocking(rh, car)
+
+        # self.score = -dist_red_exit - nb_vert_cars_in_front_red - nb_cars_blocking_cars_in_front_red - car_blocked_by_rock + cars_blocking_red_moving
+        self.score = - nb_vert_cars_in_front_red - nb_cars_blocking_cars_in_front_red + cars_blocking_red_moving
+
+    def nb_cars_blocking(self, rh, car_selected):
+        nb_cars_in_front = 0
+
+        for car in range(1, rh.nbcars):
+            if car == car_selected:
+                continue
+
+            if rh.horiz[car]: # horizontal cars
+                if (rh.move_on[car] >=  self.pos[car_selected] + rh.length[car_selected]): # under the selected vertical car
+                    if self.pos[car] <= rh.move_on[car_selected] and self.pos[car] + rh.length[car] > rh.move_on[car_selected]: # if the car crosses the selected car #################3
+                        nb_cars_in_front += 1
+                        # nb_cars_in_front += self.nb_cars_blocking_3(rh, car)
+            # else: # vertical cars
+            #     if rh.move_on[car_selected] == rh.move_on[car]: # moving on the same column of selected car
+            #         nb_cars_in_front += 1
+
+        return nb_cars_in_front
+
+    def nb_cars_blocking_3(self, rh, car_selected):
+        nb_cars_in_front = 0
+
+        for car in range(1, rh.nbcars):
+            if car == car_selected:
+                continue
+
+            if not rh.horiz[car]: # vertical cars
+                if rh.move_on[car] < self.pos[car_selected] + rh.length[car_selected]: # left of the selected horizontal car
+                    if self.pos[car] + rh.length[car] > rh.move_on[car_selected]: # if the car crosses the selected car
+                        nb_cars_in_front += 1
+        return nb_cars_in_front
+
+    def rock_blocking(self, rh, car_selected):
+        if not self.rock:
+            return 0
+
+        if rh.horiz[car_selected]: # horizontal cars
+            if self.rock[1] == self.pos[car_selected] - 1 or self.rock[1] == self.pos[car_selected] + rh.length[car_selected]:
+                return 1
+        else: # vertical cars
+            if self.rock[0] == self.pos[car_selected] - 1 or self.rock[0] == self.pos[car_selected] + rh.length[car_selected]:
+                return 1
+
+        return -1 # rock doesn't block
+
+    def nb_cars_blocked_by_rock(self, rh):
+        pass        
 
         
+    def old_nb_cars_blocking(self, car_selected, rh):
+        nb_cars_in_front = 0
+
+        for car in range(1, rh.nbcars):
+            if rh.horiz[car] and (rh.move_on[car] >=  self.pos[car_selected] + rh.length[car_selected]): # horizontal cars under the selected vertical car
+                if self.pos[car] + rh.length[car] > rh.move_on[car_selected]:
+                    nb_cars_in_front += 1
         
         
     def old_score_state(self, rh, is_max=True, is_single_player=True):
