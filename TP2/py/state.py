@@ -65,7 +65,7 @@ class State:
 
         for car in range(1, rh.nbcars):
             if not rh.horiz[car] and (rh.move_on[car] >=  self.pos[0] + rh.length[0]): # vertical cars on the right of the red car
-                if self.pos[car] + rh.length[car] > rh.move_on[0]: #2: # crosses the red car # TODO: the exit/red car is always on row = 2 ??
+                if self.is_car_blocked_by_car(rh, 0, car): #2: # crosses the red car # TODO: the exit/red car is always on row = 2 ??
                     nb_vert_cars_in_front_red += 1
 
                      # better score if the blocking car is moving:  down if len == 3, up or down if len == 2
@@ -128,6 +128,9 @@ class State:
 
     def nb_cars_blocked_by_rock(self, rh):
         pass        
+
+    def is_car_blocked_by_car(self, rh, subject, target):
+        return self.pos[target] <= rh.move_on[subject] and self.pos[target] + rh.length[target] >= rh.move_on[subject]
 
         
     def old_nb_cars_blocking(self, car_selected, rh):
