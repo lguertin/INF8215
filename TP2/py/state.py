@@ -62,25 +62,31 @@ class State:
         nb_cars_blocked_by_rock = 0
         car_blocked_by_rock = 0
         cars_blocking_red_moving = 0
+        nb_cars_left = 0
 
         for car in range(1, rh.nbcars):
             if not rh.horiz[car] and (rh.move_on[car] >=  self.pos[0] + rh.length[0]): # vertical cars on the right of the red car
-                if self.is_car_blocked_by_car(rh, 0, car): #2: # crosses the red car # TODO: the exit/red car is always on row = 2 ??
+                if self.pos[car] <= rh.move_on[0] and self.pos[car] + rh.length[car] > rh.move_on[0]: #2: # crosses the red car # TODO: the exit/red car is always on row = 2 ??
                     nb_vert_cars_in_front_red += 1
 
                      # better score if the blocking car is moving:  down if len == 3, up or down if len == 2
                     if self.c == car:
                         if (rh.length[car] == 3 and self.d == 1): # or rh.length[car] == 2:
-                            cars_blocking_red_moving += 1
-                            print('SCORE self.c: ', self.c)
+                            cars_blocking_red_moving += 2
+                            # print('SCORE self.c: ', self.c)
+                        elif (rh.length[car] == 3 and self.d == -1):
+                            cars_blocking_red_moving -= 2
                     # else:
 
                     nb_cars_blocking_cars_in_front_red += self.nb_cars_blocking(rh, car)
 
                     # car_blocked_by_rock += self.rock_blocking(rh, car)
+            if rh.horiz[car] and self.c == car and self.d == -1:
+                nb_cars_left += 1
+
 
         # self.score = -dist_red_exit - nb_vert_cars_in_front_red - nb_cars_blocking_cars_in_front_red - car_blocked_by_rock + cars_blocking_red_moving
-        self.score = - nb_vert_cars_in_front_red - nb_cars_blocking_cars_in_front_red + cars_blocking_red_moving
+        self.score = - nb_vert_cars_in_front_red - nb_cars_blocking_cars_in_front_red - car_blocked_by_rock + cars_blocking_red_moving + nb_cars_left
 
     def nb_cars_blocking(self, rh, car_selected):
         nb_cars_in_front = 0
@@ -93,7 +99,7 @@ class State:
                 if (rh.move_on[car] >=  self.pos[car_selected] + rh.length[car_selected]): # under the selected vertical car
                     if self.pos[car] <= rh.move_on[car_selected] and self.pos[car] + rh.length[car] > rh.move_on[car_selected]: # if the car crosses the selected car #################3
                         nb_cars_in_front += 1
-                        # nb_cars_in_front += self.nb_cars_blocking_3(rh, car)
+                        nb_cars_in_front += self.nb_cars_blocking_3(rh, car)
             # else: # vertical cars
             #     if rh.move_on[car_selected] == rh.move_on[car]: # moving on the same column of selected car
             #         nb_cars_in_front += 1
@@ -109,7 +115,7 @@ class State:
 
             if not rh.horiz[car]: # vertical cars
                 if rh.move_on[car] < self.pos[car_selected] + rh.length[car_selected]: # left of the selected horizontal car
-                    if self.pos[car] + rh.length[car] > rh.move_on[car_selected]: # if the car crosses the selected car
+                    if self.pos[car] <= rh.move_on[car_selected] and self.pos[car] + rh.length[car] > rh.move_on[car_selected]: # if the car crosses the selected car
                         nb_cars_in_front += 1
         return nb_cars_in_front
 

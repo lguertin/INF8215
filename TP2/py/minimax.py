@@ -6,6 +6,7 @@ class MiniMaxSearch:
         self.state = initial_state
         self.search_depth = search_depth
         self.nb_moves_tot = 0
+        self.path = []
 
     #  Un seul joueur et retourne le meilleur coup à prendre à partir de l'état courant
     def minimax_1(self, current_depth, current_state): 
@@ -31,12 +32,12 @@ class MiniMaxSearch:
     def minimax_2(self, current_depth, current_state, is_max): 
         #TODO
         if current_depth == self.search_depth:
-            print('============')
-            print('Minimax: current_state.c: ', current_state.c, 'Minimax: current_state.d: ', current_state.d)
+            # print('============')
+            # print('Minimax: current_state.c: ', current_state.c, 'Minimax: current_state.d: ', current_state.d)
             current_state.score_state(self.rushhour, not is_max, is_single_player=False)
-            print('Return: current_state.score: ', current_state.score)
-            print('Return: current_state.nb_moves: ', current_state.nb_moves)
-            print('============')
+            # print('Return: current_state.score: ', current_state.score)
+            # print('Return: current_state.nb_moves: ', current_state.nb_moves)
+            # print('============')
             return current_state.score
 
         best_score = None
@@ -109,8 +110,8 @@ class MiniMaxSearch:
             print('mve: ', end='')
             self.print_move(is_max, state)
             print('state.score aft minmax: ', state.score)
-            print('state.d: ', state.d, 'state.c: ', state.c)
-            exit()
+            # print('state.d: ', state.d, 'state.c: ', state.c)
+            # exit()
 #             if state.prev:
 #                 print('state.prev.d: ', state.prev.d, 'state.prev.c: ', state.prev.c)
 #             if state.prev.prev:
@@ -157,7 +158,7 @@ class MiniMaxSearch:
                 print('final mve: ', end='')
                 self.print_move(is_max, self.state)
                 print('----')
-                exit()
+                # exit()
                 ###
 #                 if is_max:
                 self.rushhour.print_pretty_grid(self.state)
