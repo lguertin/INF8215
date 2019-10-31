@@ -3,6 +3,8 @@ import math
 import copy
 from collections import deque
 
+IMPOSSIBLE_SCORE = 999999
+
 class State:
     
     """
@@ -57,90 +59,172 @@ class State:
         
         dist_red_exit = (4 - self.pos[0]) # TODO: Give a better score
 
-        nb_vert_cars_in_front_red = 0
-        nb_cars_blocking_cars_in_front_red = 0
-        nb_cars_blocked_by_rock = 0
-        car_blocked_by_rock = 0
-        cars_blocking_red_moving = 0
+        if self.c == 0: # Force Red to go forward
+            self.score += 100
+
+        best_score_unblocking_red = IMPOSSIBLE_SCORE
 
         for car in range(1, rh.nbcars):
-            if not rh.horiz[car] and (rh.move_on[car] >=  self.pos[0] + rh.length[0]): # vertical cars on the right of the red car
-                if self.is_car_blocked_by_car(rh, 0, car): #2: # crosses the red car # TODO: the exit/red car is always on row = 2 ??
-                    nb_vert_cars_in_front_red += 1
+            if self.is_car_blocked_by_car(rh, 0, car) == 1:
+                best_score_unblocking_red = min(best_score_unblocking_red, self.nb_cars_blocking(rh, car, (rh.move_on[0], self.pos[0] + rh.length[0]), 1))
+                # car_blocked_by_rock += self.rock_blocking(rh, car)
 
-                     # better score if the blocking car is moving:  down if len == 3, up or down if len == 2
-                    if self.c == car:
-                        if (rh.length[car] == 3 and self.d == 1): # or rh.length[car] == 2:
-                            cars_blocking_red_moving += 1
-                            print('SCORE self.c: ', self.c)
-                    # else:
+        if best_score_unblocking_red == IMPOSSIBLE_SCORE:
+            best_score_unblocking_red = 0
 
-                    nb_cars_blocking_cars_in_front_red += self.nb_cars_blocking(rh, car)
+        self.score = -dist_red_exit - best_score_unblocking_red
 
-                    # car_blocked_by_rock += self.rock_blocking(rh, car)
+    def nb_cars_blocking(self, rh, car_selected, collision_pos, depth):
+        nb_cars_blocked = 999999
 
-        # self.score = -dist_red_exit - nb_vert_cars_in_front_red - nb_cars_blocking_cars_in_front_red - car_blocked_by_rock + cars_blocking_red_moving
-        self.score = - nb_vert_cars_in_front_red - nb_cars_blocking_cars_in_front_red + cars_blocking_red_moving
-
-    def nb_cars_blocking(self, rh, car_selected):
-        nb_cars_in_front = 0
-
-        for car in range(1, rh.nbcars):
-            if car == car_selected:
-                continue
-
-            if rh.horiz[car]: # horizontal cars
-                if (rh.move_on[car] >=  self.pos[car_selected] + rh.length[car_selected]): # under the selected vertical car
-                    if self.pos[car] <= rh.move_on[car_selected] and self.pos[car] + rh.length[car] > rh.move_on[car_selected]: # if the car crosses the selected car #################3
-                        nb_cars_in_front += 1
-                        # nb_cars_in_front += self.nb_cars_blocking_3(rh, car)
-            # else: # vertical cars
-            #     if rh.move_on[car_selected] == rh.move_on[car]: # moving on the same column of selected car
-            #         nb_cars_in_front += 1
-
-        return nb_cars_in_front
-
-    def nb_cars_blocking_3(self, rh, car_selected):
-        nb_cars_in_front = 0
-
-        for car in range(1, rh.nbcars):
-            if car == car_selected:
-                continue
-
-            if not rh.horiz[car]: # vertical cars
-                if rh.move_on[car] < self.pos[car_selected] + rh.length[car_selected]: # left of the selected horizontal car
-                    if self.pos[car] + rh.length[car] > rh.move_on[car_selected]: # if the car crosses the selected car
-                        nb_cars_in_front += 1
-        return nb_cars_in_front
-
-    def rock_blocking(self, rh, car_selected):
-        if not self.rock:
+        # Only have DFS look in a depth of 5 maximum to prevent infinite loops
+        if depth >= 5:
             return 0
 
-        if rh.horiz[car_selected]: # horizontal cars
-            if self.rock[1] == self.pos[car_selected] - 1 or self.rock[1] == self.pos[car_selected] + rh.length[car_selected]:
-                return 1
-        else: # vertical cars
-            if self.rock[0] == self.pos[car_selected] - 1 or self.rock[0] == self.pos[car_selected] + rh.length[car_selected]:
-                return 1
+        if rh.horiz[car_selected]:
+            mvts_left = rh.length[car_selected] - (collision_pos[0] - self.pos[car_selected])
+            mvts_right = rh.length[car_selected] - mvts_left
 
-        return -1 # rock doesn't block
+            # Move left
+            if self.pos[car_selected] - mvts_left >= 0:
+                nb_cars_blocked = min(nb_cars_blocked, self.calculate_blocking_and_blocked_cars(rh, car_selected, -mvts_left, depth))
+            
+            # Move right
+            if self.pos[car_selected] + mvts_right <= 5:
+                nb_cars_blocked = min(nb_cars_blocked, self.calculate_blocking_and_blocked_cars(rh, car_selected, mvts_right, depth))
+
+        else:
+            mvts_up = rh.length[car_selected] - (collision_pos[1] - self.pos[car_selected])
+            mvts_down = rh.length[car_selected] - mvts_up
+
+            # Move up
+            if self.pos[car_selected] - mvts_up >= 0:
+                nb_cars_blocked = min(nb_cars_blocked, self.calculate_blocking_and_blocked_cars(rh, car_selected, -mvts_up, depth))
+ 
+            # Move down
+            if self.pos[car_selected] + mvts_down <= 5:
+                nb_cars_blocked = min(nb_cars_blocked, self.calculate_blocking_and_blocked_cars(rh, car_selected, mvts_down, depth))
+                
+        return nb_cars_blocked
+
+    def calculate_blocking_and_blocked_cars(self, rh, car_selected, mvts, depth):
+        nb_cars_blocking = 0
+        nb_cars_blocked = 0
+
+        # Calculate overlapping cars
+        overlapping_cars = self.find_overlapping_cars_by_move(rh, car_selected, mvts)
+
+        nb_cars_blocking += len(overlapping_cars)
+
+        for car in overlapping_cars:    
+            nb_cars_blocking += self.nb_cars_blocking(rh, car, self.find_overlapping_collision(rh, car_selected, mvts, car), depth + 1)
+
+        # Calculate cars blocking cars blocking exit
+        p_cars = self.find_perpendicular_cars(rh, car_selected, mvts)
+
+        nb_cars_blocked += len(p_cars)
+
+        for p_car in p_cars:
+            p_p_cars = self.find_perpendicular_cars(rh, p_car, 0)
+
+            # if the p_p_cars (vertical) are blocking the exit, calculate what it would take them to exit
+            for p_p_car in p_p_cars:
+                if rh.move_on[p_p_car] >= self.pos[0] + rh.length[0] and self.pos[p_p_car] <= rh.move_on[0] and self.pos[p_p_car] + rh.length[p_p_car] > rh.move_on[0]:
+                    nb_cars_blocked += self.nb_cars_blocking(rh, p_p_car, (rh.move_on[0], rh.move_on[p_p_car]), depth + 2)
+        return nb_cars_blocking + nb_cars_blocked
+
+
+    # def rock_blocking(self, rh, car_selected):
+    #     if not self.rock:
+    #         return 0
+        
+    #     if rh.horiz[car]: # horizontal cars
+    #             if (rh.move_on[car] >=  self.pos[car_selected] + rh.length[car_selected]): # under the selected vertical car
+    #                 if self.pos[car] <= rh.move_on[car_selected] and self.pos[car] + rh.length[car] > rh.move_on[car_selected]: # if the car crosses the selected car #################3
+    #                     nb_cars_in_front += 1
+    #                     # nb_cars_in_front += self.nb_cars_blocking_3(rh, car)
+    #         # else: # vertical cars
+    #         #     if rh.move_on[car_selected] == rh.move_on[car]: # moving on the same column of selected car
+    #         #         nb_cars_in_front += 1
+    #     if rh.horiz[car_selected]: # horizontal cars
+    #         if self.rock[1] == self.pos[car_selected] - 1 or self.rock[1] == self.pos[car_selected] + rh.length[car_selected]:
+    #             return 1
+    #     else: # vertical cars
+    #         if self.rock[0] == self.pos[car_selected] - 1 or self.rock[0] == self.pos[car_selected] + rh.length[car_selected]:
+    #             return 1
+
+    #     return -1 # rock doesn't block
 
     def nb_cars_blocked_by_rock(self, rh):
         pass        
 
-    def is_car_blocked_by_car(self, rh, subject, target):
-        return self.pos[target] <= rh.move_on[subject] and self.pos[target] + rh.length[target] >= rh.move_on[subject]
+    def is_car_blocked_by_car(self, rh, subject, target): # Return -1 if behind target, 0 if not blocking and 1 if in front of target
+        if rh.horiz[subject] != rh.horiz[target]: # Subject vertical and target horizontal, or subject horizontal and target vertical
+            if self.pos[target] <= rh.move_on[subject] and self.pos[target] + rh.length[target] > rh.move_on[subject]: # Check if crosses the rows in front 
+                if rh.move_on[target] == self.pos[subject] - 1: # Check if directly behind
+                    return -1
+                if rh.move_on[target] == self.pos[subject] + rh.length[subject]: # Check if directly in front
+                    return 1
 
-        
-    def old_nb_cars_blocking(self, car_selected, rh):
-        nb_cars_in_front = 0
+        else: # Subject vertical and target vertical or subject horizontal and target horizontal
+            if rh.move_on[subject] == rh.move_on[target]: # Check if on same row or col
+                if self.pos[target] + rh.length[target] == self.pos[subject]: # Directly above
+                    return -1
+                if self.pos[target] == self.pos[subject] + rh.length[subject]: # Directly under
+                    return 1
 
-        for car in range(1, rh.nbcars):
-            if rh.horiz[car] and (rh.move_on[car] >=  self.pos[car_selected] + rh.length[car_selected]): # horizontal cars under the selected vertical car
-                if self.pos[car] + rh.length[car] > rh.move_on[car_selected]:
-                    nb_cars_in_front += 1
-        
+        return 0
+
+    def find_overlapping_cars_by_move(self, rh, subject, offset):
+        overlapped_cars = set()
+
+        for car in range(0, rh.nbcars):
+            if car == subject:
+                continue
+
+            if rh.horiz[subject] == rh.horiz[car]:
+                if ((self.pos[car] <= self.pos[subject] + offset and self.pos[car] + rh.length[car] > self.pos[subject] + offset)
+                    or (self.pos[car] < self.pos[subject] + rh.length[subject] + offset and self.pos[car] + rh.length[car] >= self.pos[subject] + rh.length[subject] + offset)):
+                    overlapped_cars.add(car)
+            else:
+                if (self.pos[car] <= rh.move_on[subject] and self.pos[car] + rh.length[car] > rh.move_on[subject]
+                    and self.pos[subject] + offset <= rh.move_on[car] and self.pos[subject] + offset + rh.length[subject] > rh.move_on[car]):
+                    overlapped_cars.add(car)
+
+        return overlapped_cars
+
+    def find_overlapping_collision(self, rh, subject, offset, target):
+        if rh.horiz[subject] and not rh.horiz[target]:
+            return (rh.move_on[target], rh.move_on[subject])
+        elif not rh.horiz[subject] and rh.horiz[target]:
+            return (rh.move_on[subject], rh.move_on[target])
+        elif rh.horiz[subject] and rh.horiz[target]:
+            if offset > 0:
+                return (rh.move_on[subject], self.pos[target])
+            else:
+                return (rh.move_on[subject], self.pos[target] + rh.length[target] - 1)
+        else:
+            if offset > 0:
+                return (self.pos[target], rh.move_on[subject])
+            else:
+                return (self.pos[target] + rh.length[target] - 1, rh.move_on[subject])
+
+    def find_perpendicular_cars(self, rh, subject, offset):
+        perpendicular_cars = set()
+
+        for car in range(0, rh.nbcars):
+            if car == subject:
+                continue
+
+            if rh.horiz[car] != rh.horiz[subject]:
+                if rh.move_on[car] >= self.pos[subject] + offset and rh.move_on[car] < self.pos[subject] + rh.length[subject] + offset:
+                    perpendicular_cars.add(car)
+
+
+        return perpendicular_cars
+
+    def calculate_cars_blocking(self):
+        pass
         
     def old_score_state(self, rh, is_max=True, is_single_player=True):
         # TODO

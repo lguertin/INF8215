@@ -31,12 +31,12 @@ class MiniMaxSearch:
     def minimax_2(self, current_depth, current_state, is_max): 
         #TODO
         if current_depth == self.search_depth:
-            print('============')
-            print('Minimax: current_state.c: ', current_state.c, 'Minimax: current_state.d: ', current_state.d)
+            # print('============')
+            # print('Minimax: current_state.c: ', current_state.c, 'Minimax: current_state.d: ', current_state.d)
             current_state.score_state(self.rushhour, not is_max, is_single_player=False)
-            print('Return: current_state.score: ', current_state.score)
-            print('Return: current_state.nb_moves: ', current_state.nb_moves)
-            print('============')
+            # print('Return: current_state.score: ', current_state.score)
+            # print('Return: current_state.nb_moves: ', current_state.nb_moves)
+            # print('============')
             return current_state.score
 
         best_score = None
@@ -106,11 +106,11 @@ class MiniMaxSearch:
         for state in possible_states:
             state.score = self.minimax_2(1, state, not is_max)
 #             if is_max:
-            print('mve: ', end='')
-            self.print_move(is_max, state)
-            print('state.score aft minmax: ', state.score)
-            print('state.d: ', state.d, 'state.c: ', state.c)
-            exit()
+            # print('mve: ', end='')
+            # self.print_move(is_max, state)
+            # print('state.score aft minmax: ', state.score)
+            # print('state.d: ', state.d, 'state.c: ', state.c)
+            # exit()
 #             if state.prev:
 #                 print('state.prev.d: ', state.prev.d, 'state.prev.c: ', state.prev.c)
 #             if state.prev.prev:
@@ -151,16 +151,16 @@ class MiniMaxSearch:
             is_max = True
             self.state = self.decide_best_move_2(is_max)
             while not self.state.success():
-                print('----')
-                if not is_max:
-                    print('ROCK')
-                print('final mve: ', end='')
+                # print('----')
+                # if not is_max:
+                #     print('ROCK')
+                # print('final mve: ', end='')
                 self.print_move(is_max, self.state)
-                print('----')
-                exit()
+                # print('----')
+                # exit()
                 ###
 #                 if is_max:
-                self.rushhour.print_pretty_grid(self.state)
+                # self.rushhour.print_pretty_grid(self.state)
                 
                 is_max = not is_max
                 self.state = self.decide_best_move_2(is_max)
