@@ -54,12 +54,12 @@ class State:
         
         return s
             
-    def score_state(self, rh, is_max=True, is_single_player=True):
+    def score_state(self, rh):
         # self.old_score_state(rh, is_max, is_single_player)
         
         dist_red_exit = (4 - self.pos[0]) # TODO: Give a better score
 
-        if self.c == 0: # Force Red to go forward
+        if self.c == 0 and self.d == 1: # Force Red to go forward
             self.score += 100
 
         best_score_unblocking_red = IMPOSSIBLE_SCORE
@@ -67,12 +67,15 @@ class State:
         for car in range(1, rh.nbcars):
             if self.is_car_blocked_by_car(rh, 0, car) == 1:
                 best_score_unblocking_red = min(best_score_unblocking_red, self.nb_cars_blocking(rh, car, (rh.move_on[0], self.pos[0] + rh.length[0]), 1))
-                # car_blocked_by_rock += self.rock_blocking(rh, car)
 
         if best_score_unblocking_red == IMPOSSIBLE_SCORE:
             best_score_unblocking_red = 0
 
-        self.score = -dist_red_exit - best_score_unblocking_red
+        self.score = - 5 * dist_red_exit - best_score_unblocking_red
+
+        # Block the cars from going back and forth
+        if self.prev and self.c == self.prev.c and self.d != self.prev.d:
+            self.score -= 100
 
     def nb_cars_blocking(self, rh, car_selected, collision_pos, depth):
         nb_cars_blocked = 999999
@@ -82,8 +85,8 @@ class State:
             return 0
 
         if rh.horiz[car_selected]:
-            mvts_left = rh.length[car_selected] - (collision_pos[0] - self.pos[car_selected])
-            mvts_right = rh.length[car_selected] - mvts_left
+            mvts_left = rh.length[car_selected] - (collision_pos[1] - self.pos[car_selected])
+            mvts_right = rh.length[car_selected] - mvts_left + 1
 
             # Move left
             if self.pos[car_selected] - mvts_left >= 0:
@@ -94,8 +97,8 @@ class State:
                 nb_cars_blocked = min(nb_cars_blocked, self.calculate_blocking_and_blocked_cars(rh, car_selected, mvts_right, depth))
 
         else:
-            mvts_up = rh.length[car_selected] - (collision_pos[1] - self.pos[car_selected])
-            mvts_down = rh.length[car_selected] - mvts_up
+            mvts_up = rh.length[car_selected] - (collision_pos[0] - self.pos[car_selected])
+            mvts_down = rh.length[car_selected] - mvts_up + 1
 
             # Move up
             if self.pos[car_selected] - mvts_up >= 0:

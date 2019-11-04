@@ -33,7 +33,7 @@ class MiniMaxSearch:
         if current_depth == self.search_depth:
             # print('============')
             # print('Minimax: current_state.c: ', current_state.c, 'Minimax: current_state.d: ', current_state.d)
-            current_state.score_state(self.rushhour, not is_max, is_single_player=False)
+            current_state.score_state(self.rushhour)
             # print('Return: current_state.score: ', current_state.score)
             # print('Return: current_state.nb_moves: ', current_state.nb_moves)
             # print('============')
