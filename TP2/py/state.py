@@ -59,8 +59,17 @@ class State:
         
         dist_red_exit = (4 - self.pos[0]) # TODO: Give a better score
 
-        if self.c == 0 and self.d == 1: # Force Red to go forward
-            self.score += 100
+        # if self.c == 0 and self.d == 1: # Force Red to go forward
+        #     self.score += 100
+        #     return
+
+        # if self.c == 0 and self.d == -1: # Force Red to go forward
+        # if self.prev and self.prev.pos[0] > self.pos[0]:
+        #     self.score -= 100
+        #     return
+
+        # if self.prev and self.prev.pos[0] < self.pos[0]:
+        #     self.score += 100
 
         best_score_unblocking_red = IMPOSSIBLE_SCORE
 
@@ -71,7 +80,7 @@ class State:
         if best_score_unblocking_red == IMPOSSIBLE_SCORE:
             best_score_unblocking_red = 0
 
-        self.score = - 5 * dist_red_exit - best_score_unblocking_red
+        self.score += - 5 * dist_red_exit - best_score_unblocking_red
 
         # Block the cars from going back and forth
         if self.prev and self.c == self.prev.c and self.d != self.prev.d:
@@ -81,8 +90,8 @@ class State:
         nb_cars_blocked = 999999
 
         # Only have DFS look in a depth of 5 maximum to prevent infinite loops
-        if depth >= 5:
-            return 0
+        if depth >= 4:
+            return 0 # TODO: return 0 or nb_cars_blocked
 
         if rh.horiz[car_selected]:
             mvts_left = rh.length[car_selected] - (collision_pos[1] - self.pos[car_selected])
@@ -166,7 +175,7 @@ class State:
             if self.pos[target] <= rh.move_on[subject] and self.pos[target] + rh.length[target] > rh.move_on[subject]: # Check if crosses the rows in front 
                 if rh.move_on[target] == self.pos[subject] - 1: # Check if directly behind
                     return -1
-                if rh.move_on[target] == self.pos[subject] + rh.length[subject]: # Check if directly in front
+                if rh.move_on[target] == self.pos[subject] + rh.length[subject]: # Check if directly in front # TODO: should be <= for the jaune?
                     return 1
 
         else: # Subject vertical and target vertical or subject horizontal and target horizontal

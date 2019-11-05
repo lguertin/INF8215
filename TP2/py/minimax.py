@@ -105,17 +105,17 @@ class MiniMaxSearch:
             
         for state in possible_states:
             state.score = self.minimax_2(1, state, not is_max)
-#             if is_max:
-            # print('mve: ', end='')
-            # self.print_move(is_max, state)
-            # print('state.score aft minmax: ', state.score)
+            if is_max:
+                print('mve: ', end='')
+                self.print_move(is_max, state)
+                print('state.score aft minmax: ', state.score)
+                print('---')
             # print('state.d: ', state.d, 'state.c: ', state.c)
             # exit()
 #             if state.prev:
 #                 print('state.prev.d: ', state.prev.d, 'state.prev.c: ', state.prev.c)
 #             if state.prev.prev:
 #                 print('state.prev.prev.d: ', state.prev.prev.d, 'state.prev.prev.c: ', state.prev.prev.c)
-#             print('---')
 
             if best_move is None:
                 best_move = state
@@ -159,8 +159,8 @@ class MiniMaxSearch:
                 # print('----')
                 # exit()
                 ###
-#                 if is_max:
-                # self.rushhour.print_pretty_grid(self.state)
+                if is_max:
+                    self.rushhour.print_pretty_grid(self.state)
                 
                 is_max = not is_max
                 self.state = self.decide_best_move_2(is_max)
@@ -168,7 +168,7 @@ class MiniMaxSearch:
                 if is_max:
                     self.nb_moves_tot += 1
                 
-                if self.nb_moves_tot == 30:
+                if self.nb_moves_tot == 50:
                     print('FAIL')
                     break
             

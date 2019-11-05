@@ -41,6 +41,10 @@ def moves_16():
     print('===')
 
     algo.solve(s, False) 
+    print("===")
+    print('Last grid:')
+    algo.rushhour.print_pretty_grid(algo.state)
+    print('\nEND - Nb moves: ', algo.nb_moves_tot,'\n')
     # %time
 
 
