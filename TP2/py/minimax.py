@@ -87,6 +87,11 @@ class MiniMaxSearch:
         for state in possible_states:
             state.score = self.minimax_1(1, state)
 
+            print('mve: ', end='')
+            self.print_move(True, state)
+            print('state.score aft minmax: ', state.score)
+            print('---')
+
             if best_move is None:
                 best_move = state
 
@@ -144,6 +149,10 @@ class MiniMaxSearch:
             self.state = self.decide_best_move_1()
             while not self.state.success():
                 self.print_move(True, self.state)
+
+                self.rushhour.print_pretty_grid(self.state)
+                # input("Wait.....")
+
                 self.state = self.decide_best_move_1()
                 self.nb_moves_tot += 1
                 

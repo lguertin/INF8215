@@ -80,7 +80,7 @@ class State:
         if best_score_unblocking_red == IMPOSSIBLE_SCORE:
             best_score_unblocking_red = 0
 
-        self.score += - 5 * dist_red_exit - best_score_unblocking_red
+        self.score += - 100 * dist_red_exit - best_score_unblocking_red
 
         # Block the cars from going back and forth
         if self.prev and self.c == self.prev.c and self.d != self.prev.d:
@@ -93,17 +93,23 @@ class State:
         if depth >= 4:
             return 0 # TODO: return 0 or nb_cars_blocked
 
+        # print("In car : ", rh.color[car_selected], " Collision : ", collision_pos)
+
         if rh.horiz[car_selected]:
             mvts_left = rh.length[car_selected] - (collision_pos[1] - self.pos[car_selected])
             mvts_right = rh.length[car_selected] - mvts_left + 1
 
             # Move left
             if self.pos[car_selected] - mvts_left >= 0:
+                # print("Car :", rh.color[car_selected], " mtvs_left: ", mvts_left)
                 nb_cars_blocked = min(nb_cars_blocked, self.calculate_blocking_and_blocked_cars(rh, car_selected, -mvts_left, depth))
+                nb_cars_blocked += mvts_left
             
             # Move right
-            if self.pos[car_selected] + mvts_right <= 5:
+            if self.pos[car_selected] + rh.length[car_selected] - 1 + mvts_right <= 5:
+                # print("Car :", rh.color[car_selected], " mtvs_right: ", mvts_right)
                 nb_cars_blocked = min(nb_cars_blocked, self.calculate_blocking_and_blocked_cars(rh, car_selected, mvts_right, depth))
+                nb_cars_blocked += mvts_right
 
         else:
             mvts_up = rh.length[car_selected] - (collision_pos[0] - self.pos[car_selected])
@@ -111,11 +117,15 @@ class State:
 
             # Move up
             if self.pos[car_selected] - mvts_up >= 0:
+                # print("Car :", rh.color[car_selected], " mtvs_up: ", mvts_up)
                 nb_cars_blocked = min(nb_cars_blocked, self.calculate_blocking_and_blocked_cars(rh, car_selected, -mvts_up, depth))
- 
+                nb_cars_blocked += mvts_up
+
             # Move down
-            if self.pos[car_selected] + mvts_down <= 5:
+            if self.pos[car_selected] + rh.length[car_selected] - 1 + mvts_down <= 5:
+                # print("Car :", rh.color[car_selected], " mvts_down: ", mvts_down)
                 nb_cars_blocked = min(nb_cars_blocked, self.calculate_blocking_and_blocked_cars(rh, car_selected, mvts_down, depth))
+                nb_cars_blocked += mvts_down
                 
         return nb_cars_blocked
 
@@ -128,8 +138,10 @@ class State:
 
         nb_cars_blocking += len(overlapping_cars)
 
-        for car in overlapping_cars:    
+        for car in overlapping_cars:
+            # print("Overlapping car : ", rh.color[car])   
             nb_cars_blocking += self.nb_cars_blocking(rh, car, self.find_overlapping_collision(rh, car_selected, mvts, car), depth + 1)
+            # print("Back from Overlapping car : ", rh.color[car])   
 
         # Calculate cars blocking cars blocking exit
         p_cars = self.find_perpendicular_cars(rh, car_selected, mvts)
@@ -141,8 +153,13 @@ class State:
 
             # if the p_p_cars (vertical) are blocking the exit, calculate what it would take them to exit
             for p_p_car in p_p_cars:
+                if p_p_car == car_selected:
+                    continue
+
                 if rh.move_on[p_p_car] >= self.pos[0] + rh.length[0] and self.pos[p_p_car] <= rh.move_on[0] and self.pos[p_p_car] + rh.length[p_p_car] > rh.move_on[0]:
+                    # print("p_p_car : ", rh.color[p_p_car])   
                     nb_cars_blocked += self.nb_cars_blocking(rh, p_p_car, (rh.move_on[0], rh.move_on[p_p_car]), depth + 2)
+                    # print("Back from p_p_car : ", rh.color[p_p_car])  
         return nb_cars_blocking + nb_cars_blocked
 
 
@@ -195,9 +212,10 @@ class State:
                 continue
 
             if rh.horiz[subject] == rh.horiz[car]:
-                if ((self.pos[car] <= self.pos[subject] + offset and self.pos[car] + rh.length[car] > self.pos[subject] + offset)
-                    or (self.pos[car] < self.pos[subject] + rh.length[subject] + offset and self.pos[car] + rh.length[car] >= self.pos[subject] + rh.length[subject] + offset)):
-                    overlapped_cars.add(car)
+                if rh.move_on[subject] == rh.move_on[car]:
+                    if ((self.pos[car] <= self.pos[subject] + offset and self.pos[car] + rh.length[car] > self.pos[subject] + offset)
+                        or (self.pos[car] < self.pos[subject] + rh.length[subject] + offset and self.pos[car] + rh.length[car] >= self.pos[subject] + rh.length[subject] + offset)):
+                        overlapped_cars.add(car)
             else:
                 if (self.pos[car] <= rh.move_on[subject] and self.pos[car] + rh.length[car] > rh.move_on[subject]
                     and self.pos[subject] + offset <= rh.move_on[car] and self.pos[subject] + offset + rh.length[subject] > rh.move_on[car]):
@@ -207,9 +225,9 @@ class State:
 
     def find_overlapping_collision(self, rh, subject, offset, target):
         if rh.horiz[subject] and not rh.horiz[target]:
-            return (rh.move_on[target], rh.move_on[subject])
-        elif not rh.horiz[subject] and rh.horiz[target]:
             return (rh.move_on[subject], rh.move_on[target])
+        elif not rh.horiz[subject] and rh.horiz[target]:
+            return (rh.move_on[target], rh.move_on[subject])
         elif rh.horiz[subject] and rh.horiz[target]:
             if offset > 0:
                 return (rh.move_on[subject], self.pos[target])
