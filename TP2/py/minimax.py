@@ -28,12 +28,12 @@ class MiniMaxSearch:
         return best_score
         
     
-    def minimax_2(self, current_depth, current_state, is_max): 
+    def minimax_2(self, current_depth, current_state, is_max, is_rock_turn): 
         #TODO
         if current_depth == self.search_depth:
             # print('============')
             # print('Minimax: current_state.c: ', current_state.c, 'Minimax: current_state.d: ', current_state.d)
-            current_state.score_state(self.rushhour)
+            current_state.score_state(self.rushhour, is_rock_turn)
             # print('Return: current_state.score: ', current_state.score)
             # print('Return: current_state.nb_moves: ', current_state.nb_moves)
             # print('============')
@@ -55,7 +55,7 @@ class MiniMaxSearch:
 #             return current_state.score
         
         for state in possible_states:
-            score = self.minimax_2(current_depth + 1, state, not is_max)        
+            score = self.minimax_2(current_depth + 1, state, not is_max, is_rock_turn)        
 
             if best_score is None:
                 best_score = score
@@ -99,7 +99,7 @@ class MiniMaxSearch:
         
         return best_move
 
-    def decide_best_move_2(self, is_max):
+    def decide_best_move_2(self, is_max, is_rock_turn):
         #TODO
         best_move = None
 
@@ -109,12 +109,12 @@ class MiniMaxSearch:
             possible_states = self.rushhour.possible_rock_moves(self.state)
             
         for state in possible_states:
-            state.score = self.minimax_2(1, state, not is_max)
-            if is_max:
-                print('mve: ', end='')
-                self.print_move(is_max, state)
-                print('state.score aft minmax: ', state.score)
-                print('---')
+            state.score = self.minimax_2(1, state, not is_max, is_rock_turn)
+            # if is_max:
+            print('mve: ', end='')
+            self.print_move(is_max, state)
+            print('state.score aft minmax: ', state.score)
+            print('---')
             # print('state.d: ', state.d, 'state.c: ', state.c)
             # exit()
 #             if state.prev:
@@ -158,7 +158,7 @@ class MiniMaxSearch:
                 
         else:
             is_max = True
-            self.state = self.decide_best_move_2(is_max)
+            self.state = self.decide_best_move_2(is_max, is_rock_turn=is_max)
             while not self.state.success():
                 # print('----')
                 # if not is_max:
@@ -174,7 +174,7 @@ class MiniMaxSearch:
                 input("Wait.....")
                 
                 is_max = not is_max
-                self.state = self.decide_best_move_2(is_max)
+                self.state = self.decide_best_move_2(is_max, is_rock_turn=is_max)
                 
                 if is_max:
                     self.nb_moves_tot += 1

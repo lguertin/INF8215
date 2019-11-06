@@ -74,17 +74,13 @@ class State:
         best_score_unblocking_red = IMPOSSIBLE_SCORE
 
         if not is_max:
-            # print('rock')
             best_score_unblocking_red = 0
-        # else:
-            # print('no rock')
 
         for car in range(1, rh.nbcars):
             if self.is_car_blocked_by_car(rh, 0, car) == 1:
                 if is_max:
                     best_score_unblocking_red = min(best_score_unblocking_red, self.nb_cars_blocking(rh, car, (rh.move_on[0], self.pos[0] + rh.length[0]), 1))
                 else:
-                    # print('rock')
                     best_score_unblocking_red = max(best_score_unblocking_red, self.nb_rocks_blocking(rh, car, (rh.move_on[0], self.pos[0] + rh.length[0]), 1))
 
         if best_score_unblocking_red == IMPOSSIBLE_SCORE:
@@ -255,8 +251,8 @@ class State:
                     nb_cars_blocked += self.nb_rocks_blocking(rh, p_p_car, (rh.move_on[0], rh.move_on[p_p_car]), depth + 2)
                     # print("Back from p_p_car : ", rh.color[p_p_car])
 
-        if self.is_rock_blocking(rh, car_selected):
-            nb_cars_blocked += (5-depth)
+        # if self.is_rock_blocking(rh, car_selected):
+        #     nb_cars_blocked += (5-depth)
 
         return nb_cars_blocking + nb_cars_blocked
 
