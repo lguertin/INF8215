@@ -170,6 +170,8 @@ class MiniMaxSearch:
                 ###
                 if is_max:
                     self.rushhour.print_pretty_grid(self.state)
+
+                input("Wait.....")
                 
                 is_max = not is_max
                 self.state = self.decide_best_move_2(is_max)

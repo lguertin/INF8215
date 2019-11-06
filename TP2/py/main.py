@@ -70,4 +70,4 @@ def moves_14():
     # %time
 
 
-moves_16()
+moves_14()

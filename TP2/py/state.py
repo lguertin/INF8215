@@ -160,7 +160,11 @@ class State:
                 if rh.move_on[p_p_car] >= self.pos[0] + rh.length[0] and self.pos[p_p_car] <= rh.move_on[0] and self.pos[p_p_car] + rh.length[p_p_car] > rh.move_on[0]:
                     # print("p_p_car : ", rh.color[p_p_car])   
                     nb_cars_blocked += self.nb_cars_blocking(rh, p_p_car, (rh.move_on[0], rh.move_on[p_p_car]), depth + 2)
-                    # print("Back from p_p_car : ", rh.color[p_p_car])  
+                    # print("Back from p_p_car : ", rh.color[p_p_car])
+
+        if self.is_rock_blocking(rh, car_selected):
+            nb_cars_blocked += 1
+
         return nb_cars_blocking + nb_cars_blocked
 
 
@@ -254,8 +258,15 @@ class State:
 
         return perpendicular_cars
 
-    def calculate_cars_blocking(self):
-        pass
+    def is_rock_blocking(self, rh, car_selected):
+        if self.rock:
+            if rh.horiz[car_selected] and rh.move_on[car_selected] == self.rock[0]:
+                if (self.pos[car_selected] - 1) == self.rock[1] or (self.pos[car_selected] + rh.length[car_selected]) == self.rock[1]:
+                    return True
+            elif not rh.horiz[car_selected] and rh.move_on[car_selected] == self.rock[1]:
+                if (self.pos[car_selected] - 1) == self.rock[0] or (self.pos[car_selected] + rh.length[car_selected]) == self.rock[0]:
+                    return True
+        return False
         
     def old_score_state(self, rh, is_max=True, is_single_player=True):
         # TODO
