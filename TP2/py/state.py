@@ -154,6 +154,7 @@ class State:
             # if the p_p_cars (vertical) are blocking the exit, calculate what it would take them to exit
             for p_p_car in p_p_cars:
                 if p_p_car == car_selected:
+                    nb_cars_blocked += 1
                     continue
 
                 if rh.move_on[p_p_car] >= self.pos[0] + rh.length[0] and self.pos[p_p_car] <= rh.move_on[0] and self.pos[p_p_car] + rh.length[p_p_car] > rh.move_on[0]:
