@@ -82,6 +82,7 @@ class State:
         for car in range(1, rh.nbcars):
             if self.is_car_blocked_by_car(rh, 0, car) == 1:
                 if is_max:
+                    # print('not rock')
                     best_score_unblocking_red = min(best_score_unblocking_red, self.nb_cars_blocking(rh, car, (rh.move_on[0], self.pos[0] + rh.length[0]), 1))
                 else:
                     # print('rock')

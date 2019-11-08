@@ -168,8 +168,8 @@ class MiniMaxSearch:
                 # print('----')
                 # exit()
                 ###
-                if is_max:
-                    self.rushhour.print_pretty_grid(self.state)
+                # if is_max:
+                self.rushhour.print_pretty_grid(self.state)
 
                 input("Wait.....")
                 
