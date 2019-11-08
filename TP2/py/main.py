@@ -16,7 +16,6 @@ def moves_9(depth=1, is_single=True):
     algo.rushhour.init_positions(s)
 
     print('Init: ')
-    # print(algo.rushhour.free_pos)
     algo.rushhour.print_pretty_grid(s)
     print('===')
 
@@ -36,7 +35,6 @@ def moves_16(depth=1, is_single=True):
     algo.rushhour.init_positions(s)
 
     print('Init: ')
-    # print(algo.rushhour.free_pos)
     algo.rushhour.print_pretty_grid(s)
     print('===')
 
@@ -58,7 +56,6 @@ def moves_14(depth=1, is_single=True):
     algo.rushhour.init_positions(s)
     
     print('Init: ')
-    # print(algo.rushhour.free_pos)
     algo.rushhour.print_pretty_grid(s)
     print('===')
 
@@ -71,4 +68,4 @@ def moves_14(depth=1, is_single=True):
 
 depth = 3
 is_single = False
-moves_9(depth, is_single)
+moves_16(depth, is_single)
