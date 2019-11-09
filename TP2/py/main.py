@@ -1,11 +1,12 @@
 from rushhour import Rushhour
 from state import State 
 from minimax import  MiniMaxSearch 
+from minimax import Algorithm
 
 
 # Recherche adverserielle 
 
-def moves_9(depth=1, is_single=True):
+def moves_9(depth=1, algorithm=Algorithm.MINIMAX_SINGLE):
     # Solution optimale: 9 moves
     rh = Rushhour([True, False, False, False, True],
                     [2, 3, 2, 3, 3],
@@ -19,11 +20,12 @@ def moves_9(depth=1, is_single=True):
     algo.rushhour.print_pretty_grid(s)
     print('===')
 
-    algo.solve(s, is_single)
+    algo.solve(s, algorithm)
     print('\nEND - Nb moves: ', algo.nb_moves_tot,'\n')
+    print('\nEND - Nb states analyzed: ', algo.nb_state_searched,'\n')
     # %time
 
-def moves_16(depth=1, is_single=True):
+def moves_16(depth=1, algorithm=Algorithm.MINIMAX_SINGLE):
 
     # solution optimale: 16 moves
     rh = Rushhour([True, True, False, False, True, True, False, False],
@@ -38,14 +40,15 @@ def moves_16(depth=1, is_single=True):
     algo.rushhour.print_pretty_grid(s)
     print('===')
 
-    algo.solve(s, is_single) 
+    algo.solve(s, algorithm) 
     print("===")
     print('Last grid:')
     algo.rushhour.print_pretty_grid(algo.state)
     print('\nEND - Nb moves: ', algo.nb_moves_tot,'\n')
+    print('\nEND - Nb states analyzed: ', algo.nb_state_searched,'\n')
     # %time
 
-def moves_14(depth=1, is_single=True):
+def moves_14(depth=1, algorithm=Algorithm.MINIMAX_SINGLE):
     # solution optimale: 14 moves
     rh = Rushhour([True, False, True, False, False, False, True, True, False, True, True],
                     [2, 2, 3, 2, 2, 3, 3, 2, 2, 2, 2],
@@ -59,13 +62,14 @@ def moves_14(depth=1, is_single=True):
     algo.rushhour.print_pretty_grid(s)
     print('===')
 
-    algo.solve(s, is_single)
+    algo.solve(s, algorithm)
     print("===")
     print('Last grid:')
     algo.rushhour.print_pretty_grid(algo.state)
     print('\nEND - Nb moves: ', algo.nb_moves_tot,'\n')
+    print('\nEND - Nb states analyzed: ', algo.nb_state_searched,'\n')
     # %time
 
 depth = 3
-is_single = False
-moves_16(depth, is_single)
+algorithm = Algorithm.MINIMAX_MULTI
+moves_16(depth, algorithm)

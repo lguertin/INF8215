@@ -1,4 +1,12 @@
 import numpy as np
+import enum
+
+class Algorithm(enum.Enum):
+    MINIMAX_SINGLE = 1
+    MINIMAX_MULTI = 2
+    PRUNING = 3
+    EXPECTIMAX = 4
+
 
 class MiniMaxSearch:
     def __init__(self, rushHour, initial_state, search_depth):
@@ -6,10 +14,13 @@ class MiniMaxSearch:
         self.state = initial_state
         self.search_depth = search_depth
         self.nb_moves_tot = 0
+        self.nb_state_searched = 0
 
     #  Un seul joueur et retourne le meilleur coup à prendre à partir de l'état courant
     def minimax_1(self, current_depth, current_state): 
         #TODO
+        self.nb_state_searched += 1
+
         best_score = None
         possible_states = self.rushhour.possible_moves(current_state)
         
@@ -30,6 +41,8 @@ class MiniMaxSearch:
     
     def minimax_2(self, current_depth, current_state, is_max, is_rock_turn): 
         #TODO
+        self.nb_state_searched += 1
+
         if current_depth == self.search_depth:
             # print('============')
             # print('Minimax: current_state.c: ', current_state.c, 'Minimax: current_state.d: ', current_state.d)
@@ -60,10 +73,41 @@ class MiniMaxSearch:
 
         return best_score
 
-    def minimax_pruning(self, current_depth, current_state, is_max, alpha, beta):
-        #TODO
-        # return best_move
-        pass
+    def minimax_pruning(self, current_depth, current_state, is_max, alpha, beta, is_rock_turn):
+
+        self.nb_state_searched += 1
+        best_score = None
+
+        if current_depth == self.search_depth:
+            current_state.score_state(self.rushhour, is_rock_turn)
+            return current_state.score
+
+        if is_max:
+            possible_states = self.rushhour.possible_moves(current_state)
+        else:
+            possible_states = self.rushhour.possible_rock_moves(current_state)
+        
+        for state in possible_states:
+            score = self.minimax_pruning(current_depth + 1, state, not is_max, alpha, beta, is_rock_turn)        
+
+            if best_score is None:
+                best_score = score
+
+            if is_max:
+                best_score = max(best_score, score)
+                if score >= beta:
+                    return best_score
+                
+                alpha = max(alpha, score)
+            else:
+                best_score = min(best_score, score)
+                
+                if score <= alpha:
+                    return best_score
+                
+                beta = min(beta, score)
+                
+        return best_score
 
     def expectimax(self, current_depth, current_state, is_max):
         #TODO
@@ -120,19 +164,48 @@ class MiniMaxSearch:
         
         return best_move
 
-    def decide_best_move_pruning(self, is_max):
-        # TODO
-        pass
+    def decide_best_move_pruning(self, is_max, is_rock_turn):
+        #TODO
+        best_move = None
+        alpha = -1000000
+        beta = 1000000
+
+        if is_max:
+            possible_states = self.rushhour.possible_moves(self.state)
+        else:
+            possible_states = self.rushhour.possible_rock_moves(self.state)
+            
+        for state in possible_states:
+            state.score = self.minimax_pruning(1, state, not is_max, alpha, beta, is_rock_turn)
+
+            if best_move is None:
+                best_move = state
+
+            if is_max:
+                best_move = max(best_move, state)
+                if state.score >= beta:
+                    return best_move
+                
+                alpha = max(alpha, state.score)
+            else:
+                best_move = min(best_move, state)
+                
+                if state.score <= alpha:
+                    return best_move
+                
+                beta = min(beta, state.score)
+        
+        return best_move
 
     def decide_best_move_expectimax(self, is_max):
         # TODO
         pass
 
-    def solve(self, state, is_singleplayer): # apelle plusieurs fois decide_best_move
+    def solve(self, state, algorithm): # apelle plusieurs fois decide_best_move
         #TODO
         self.nb_moves_tot = 1
 
-        if is_singleplayer:
+        if algorithm == Algorithm.MINIMAX_SINGLE:
             self.state = self.decide_best_move_1()
             while not self.state.success():
                 print('final mve: ', end='')
@@ -143,7 +216,7 @@ class MiniMaxSearch:
                 self.state = self.decide_best_move_1()
                 self.nb_moves_tot += 1
                 
-        else:
+        elif algorithm == Algorithm.MINIMAX_MULTI:
             is_max = True
             self.state = self.decide_best_move_2(is_max, is_rock_turn=is_max)
             while not self.state.success():
@@ -164,6 +237,32 @@ class MiniMaxSearch:
                 if self.nb_moves_tot == 50:
                     print('FAIL')
                     break
+        
+        elif algorithm == Algorithm.PRUNING:
+            is_max = True
+            self.state = self.decide_best_move_2(is_max, is_rock_turn=is_max)
+            while not self.state.success():
+
+                print('final mve: ', end='')
+                self.print_move(is_max, self.state)
+                # if is_max:
+                self.rushhour.print_pretty_grid(self.state)
+
+                input("Wait.....")
+                
+                is_max = not is_max
+                self.state = self.decide_best_move_pruning(is_max, is_rock_turn=is_max)
+                
+                if is_max:
+                    self.nb_moves_tot += 1
+                
+                if self.nb_moves_tot == 50:
+                    print('FAIL')
+                    break
+
+        else:
+            pass
+
             
     def print_move(self, is_max, state):
         #TODO
