@@ -1,11 +1,18 @@
 import numpy as np
 import enum
+import random
+import math
 
 class Algorithm(enum.Enum):
     MINIMAX_SINGLE = 1
     MINIMAX_MULTI = 2
     PRUNING = 3
     EXPECTIMAX = 4
+
+class ExpectimaxProbability(enum.Enum):
+    RANDOM = 1
+    OPTIMISTIC = 2
+    PESSIMISTIC = 3
 
 
 class MiniMaxSearch:
@@ -15,6 +22,7 @@ class MiniMaxSearch:
         self.search_depth = search_depth
         self.nb_moves_tot = 0
         self.nb_state_searched = 0
+        self.expectimax_probability = ExpectimaxProbability.RANDOM
 
     #  Un seul joueur et retourne le meilleur coup à prendre à partir de l'état courant
     def minimax_1(self, current_depth, current_state): 
@@ -109,10 +117,78 @@ class MiniMaxSearch:
                 
         return best_score
 
-    def expectimax(self, current_depth, current_state, is_max):
+    def expectimax(self, current_depth, current_state, is_max, is_rock_turn):
         #TODO
-        # return best_move
-        pass
+        self.nb_state_searched += 1
+
+        if current_depth == self.search_depth:
+            current_state.score_state(self.rushhour, is_rock_turn)
+            return current_state.score
+
+        best_score = None
+
+        if is_max:
+            possible_states = self.rushhour.possible_moves(current_state)
+
+            for state in possible_states:
+                score = self.expectimax(current_depth + 1, state, not is_max, is_rock_turn)        
+
+                if best_score is None:
+                    best_score = score
+
+                if is_max:
+                    best_score = max(best_score, score)
+                else:
+                    best_score = min(best_score, score)
+
+            return best_score
+        else:
+            possible_states = self.rushhour.possible_rock_moves(current_state)
+
+            scores = []
+            for state in possible_states:
+                scores.append(self.expectimax(current_depth + 1, state, not is_max, is_rock_turn)) 
+
+            p = 1
+            scores_len = len(scores)
+            p = p / scores_len
+            p_arr = []
+
+            if self.expectimax_probability == ExpectimaxProbability.RANDOM:
+                for idx in range(0, scores_len):
+                    p_arr.append(p)
+
+            else:
+                mid = math.floor(scores_len / 2)
+                
+                for idx in range(0, scores_len):
+                    p_arr.append(p + (idx - mid) * p / scores_len)
+
+                if sum(p_arr) != 1.0:
+                    p_left = 1.0 - sum(p_arr)
+
+                    for idx in range(0, scores_len):
+                        p_arr[idx] = p_arr[idx] + p_left / scores_len
+
+                if self.expectimax_probability == ExpectimaxProbability.OPTIMISTIC: # probability higher for lower scores
+                    scores.sort(reverse=True)
+
+                elif self.expectimax_probability == ExpectimaxProbability.PESSIMISTIC: # probability higher for higher scores
+                    scores.sort()
+
+            print(sum(p_arr))
+            scores = [a*b for a,b in zip(scores,p_arr)]
+
+            return sum(scores)
+
+
+            # mid
+            # for idx in range(0, len(scores)):
+            #     scores[idx] = x * ( p + (p * idx - )
+
+            # scores = [x * (p for x in scores]               
+
+        return best_score
 
     # Trouve et exécute le meilleur coup pour une partie à un joueur (apelle version de mininmax)
     def decide_best_move_1(self):
@@ -197,9 +273,29 @@ class MiniMaxSearch:
         
         return best_move
 
-    def decide_best_move_expectimax(self, is_max):
-        # TODO
-        pass
+    def decide_best_move_expectimax(self, is_max, is_rock_turn):
+        #TODO
+        best_move = None
+
+        if is_max:
+            possible_states = self.rushhour.possible_moves(self.state)
+        else:
+            possible_states = self.rushhour.possible_rock_moves(self.state)
+            return random.choice(possible_states)
+            
+        for state in possible_states:
+            state.score = self.expectimax(1, state, not is_max, is_rock_turn)
+
+            if best_move is None:
+                best_move = state
+
+            if is_max:
+                best_move = max(best_move, state)
+            else:
+                best_move = min(best_move, state)
+
+        
+        return best_move
 
     def solve(self, state, algorithm): # apelle plusieurs fois decide_best_move
         #TODO
@@ -240,7 +336,7 @@ class MiniMaxSearch:
         
         elif algorithm == Algorithm.PRUNING:
             is_max = True
-            self.state = self.decide_best_move_2(is_max, is_rock_turn=is_max)
+            self.state = self.decide_best_move_pruning(is_max, is_rock_turn=is_max)
             while not self.state.success():
 
                 print('final mve: ', end='')
@@ -261,7 +357,26 @@ class MiniMaxSearch:
                     break
 
         else:
-            pass
+            is_max = True
+            self.state = self.decide_best_move_expectimax(is_max, is_rock_turn=is_max)
+            while not self.state.success():
+
+                print('final mve: ', end='')
+                self.print_move(is_max, self.state)
+                # if is_max:
+                self.rushhour.print_pretty_grid(self.state)
+
+                input("Wait.....")
+                
+                is_max = not is_max
+                self.state = self.decide_best_move_expectimax(is_max, is_rock_turn=is_max)
+                
+                if is_max:
+                    self.nb_moves_tot += 1
+                
+                if self.nb_moves_tot == 50:
+                    print('FAIL')
+                    break
 
             
     def print_move(self, is_max, state):

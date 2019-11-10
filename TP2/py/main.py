@@ -1,8 +1,6 @@
 from rushhour import Rushhour
 from state import State 
-from minimax import  MiniMaxSearch 
-from minimax import Algorithm
-
+from minimax import MiniMaxSearch, Algorithm, ExpectimaxProbability
 
 # Recherche adverserielle 
 
@@ -15,6 +13,7 @@ def moves_9(depth=1, algorithm=Algorithm.MINIMAX_SINGLE):
     s = State([1, 0, 1, 3, 2])
     algo = MiniMaxSearch(rh, s,depth)
     algo.rushhour.init_positions(s)
+    algo.expectimax_probability = ExpectimaxProbability.RANDOM
 
     print('Init: ')
     algo.rushhour.print_pretty_grid(s)
@@ -35,6 +34,7 @@ def moves_16(depth=1, algorithm=Algorithm.MINIMAX_SINGLE):
     s = State([1, 0, 1, 4, 2, 4, 0, 1])
     algo = MiniMaxSearch(rh, s, depth) 
     algo.rushhour.init_positions(s)
+    algo.expectimax_probability = ExpectimaxProbability.PESSIMISTIC
 
     print('Init: ')
     algo.rushhour.print_pretty_grid(s)
@@ -57,6 +57,7 @@ def moves_14(depth=1, algorithm=Algorithm.MINIMAX_SINGLE):
     s = State([0, 0, 3, 1, 2, 1, 0, 0, 4, 3, 4])
     algo = MiniMaxSearch(rh, s,depth)
     algo.rushhour.init_positions(s)
+    algo.expectimax_probability = ExpectimaxProbability.RANDOM
     
     print('Init: ')
     algo.rushhour.print_pretty_grid(s)
@@ -71,5 +72,5 @@ def moves_14(depth=1, algorithm=Algorithm.MINIMAX_SINGLE):
     # %time
 
 depth = 3
-algorithm = Algorithm.MINIMAX_MULTI
+algorithm = Algorithm.EXPECTIMAX
 moves_16(depth, algorithm)
