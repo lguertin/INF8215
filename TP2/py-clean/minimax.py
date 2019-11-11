@@ -52,12 +52,7 @@ class MiniMaxSearch:
         self.nb_state_searched += 1
 
         if current_depth == self.search_depth:
-            # print('============')
-            # print('Minimax: current_state.c: ', current_state.c, 'Minimax: current_state.d: ', current_state.d)
             current_state.score_state(self.rushhour, is_rock_turn)
-            # print('Return: current_state.score: ', current_state.score)
-            # print('Return: current_state.nb_moves: ', current_state.nb_moves)
-            # print('============')
             return current_state.score
 
         best_score = None
@@ -66,7 +61,6 @@ class MiniMaxSearch:
             possible_states = self.rushhour.possible_moves(current_state)
         else:
             possible_states = self.rushhour.possible_rock_moves(current_state)
-#         print('current_depth: ', current_depth, 'self.search_depth: ', self.search_depth)
         
         for state in possible_states:
             score = self.minimax_2(current_depth + 1, state, not is_max, is_rock_turn)        
@@ -176,17 +170,9 @@ class MiniMaxSearch:
                 elif self.expectimax_probability == ExpectimaxProbability.PESSIMISTIC: # probability higher for higher scores
                     scores.sort()
 
-            print(sum(p_arr))
             scores = [a*b for a,b in zip(scores,p_arr)]
 
             return sum(scores)
-
-
-            # mid
-            # for idx in range(0, len(scores)):
-            #     scores[idx] = x * ( p + (p * idx - )
-
-            # scores = [x * (p for x in scores]               
 
         return best_score
 
@@ -199,11 +185,6 @@ class MiniMaxSearch:
         possible_states = self.rushhour.possible_moves(self.state)
         for state in possible_states:
             state.score = self.minimax_1(1, state)
-
-            # print('mve: ', end='')
-            # self.print_move(True, state)
-            # print('state.score aft minmax: ', state.score)
-            # print('---')
 
             if best_move is None:
                 best_move = state
@@ -223,11 +204,6 @@ class MiniMaxSearch:
             
         for state in possible_states:
             state.score = self.minimax_2(1, state, not is_max, is_rock_turn)
-            # # if is_max:
-            # print('mve: ', end='')
-            # self.print_move(is_max, state)
-            # print('state.score aft minmax: ', state.score)
-            # print('---')
 
             if best_move is None:
                 best_move = state
@@ -304,10 +280,9 @@ class MiniMaxSearch:
         if algorithm == Algorithm.MINIMAX_SINGLE:
             self.state = self.decide_best_move_1()
             while not self.state.success():
-                print('final mve: ', end='')
+                print('final move: ', end='')
                 self.print_move(True, self.state)
-                self.rushhour.print_pretty_grid(self.state)
-                # input("Wait.....")
+                # self.rushhour.print_pretty_grid(self.state)
 
                 self.state = self.decide_best_move_1()
                 self.nb_moves_tot += 1
@@ -317,12 +292,9 @@ class MiniMaxSearch:
             self.state = self.decide_best_move_2(is_max, is_rock_turn=is_max)
             while not self.state.success():
 
-                print('final mve: ', end='')
+                print('final move: ', end='')
                 self.print_move(is_max, self.state)
-                # if is_max:
-                self.rushhour.print_pretty_grid(self.state)
-
-                # input("Wait.....")
+                # self.rushhour.print_pretty_grid(self.state)
                 
                 is_max = not is_max
                 self.state = self.decide_best_move_2(is_max, is_rock_turn=is_max)
@@ -339,12 +311,9 @@ class MiniMaxSearch:
             self.state = self.decide_best_move_pruning(is_max, is_rock_turn=is_max)
             while not self.state.success():
 
-                print('final mve: ', end='')
+                print('final move: ', end='')
                 self.print_move(is_max, self.state)
-                # if is_max:
-                self.rushhour.print_pretty_grid(self.state)
-
-                # input("Wait.....")
+                # self.rushhour.print_pretty_grid(self.state)
                 
                 is_max = not is_max
                 self.state = self.decide_best_move_pruning(is_max, is_rock_turn=is_max)
@@ -352,7 +321,7 @@ class MiniMaxSearch:
                 if is_max:
                     self.nb_moves_tot += 1
                 
-                if self.nb_moves_tot == 50:
+                if self.nb_moves_tot == 80:
                     print('FAIL')
                     break
 
@@ -361,12 +330,9 @@ class MiniMaxSearch:
             self.state = self.decide_best_move_expectimax(is_max, is_rock_turn=is_max)
             while not self.state.success():
 
-                print('final mve: ', end='')
+                print('final move: ', end='')
                 self.print_move(is_max, self.state)
-                # if is_max:
-                self.rushhour.print_pretty_grid(self.state)
-
-                # input("Wait.....")
+                # self.rushhour.print_pretty_grid(self.state)
                 
                 is_max = not is_max
                 self.state = self.decide_best_move_expectimax(is_max, is_rock_turn=is_max)

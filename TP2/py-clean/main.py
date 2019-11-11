@@ -57,7 +57,7 @@ def moves_14(depth=1, algorithm=Algorithm.MINIMAX_SINGLE):
     s = State([0, 0, 3, 1, 2, 1, 0, 0, 4, 3, 4])
     algo = MiniMaxSearch(rh, s,depth)
     algo.rushhour.init_positions(s)
-    algo.expectimax_probability = ExpectimaxProbability.RANDOM
+    algo.expectimax_probability = ExpectimaxProbability.PESSIMISTIC
     
     print('Init: ')
     algo.rushhour.print_pretty_grid(s)
