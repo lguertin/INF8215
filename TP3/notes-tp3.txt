@@ -1,0 +1,12 @@
+-si on n'utilise pas des colonnes dire pourquoi on ne les touche pas 
+Dans la partie preiction 
+
+
+- dire si on enleve une colonne parce qu'elle donne un moins bon resultat ou enlever parce que inutile
+
+- leaderboard est juste pour 35%, on  ne voit pas la partie qui sera evaluee, 
+c'est pour eviter d'overfit le modele, rester general, pas se fier a juste mon score a augmente
+
+- Respecter les 2 colonnes demandees pour soumettre sur Kaggle
+- Par defaut prend les 2 derniers, sinon selectionner les 2 que l'on veut soumettre
+- 10 soumissions par jour par personne 
