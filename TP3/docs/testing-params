@@ -1,0 +1,144 @@
+MLPClassifier(alpha=1, max_iter=1000, hidden_layer_sizes=(150,)),
+
+Model:  MLPClassifier(activation='relu', alpha=1, batch_size='auto', beta_1=0.9,
+       beta_2=0.999, early_stopping=False, epsilon=1e-08,
+       hidden_layer_sizes=(200,), learning_rate='constant',
+       learning_rate_init=0.001, max_iter=1000, momentum=0.9,
+       n_iter_no_change=10, nesterovs_momentum=True, power_t=0.5,
+       random_state=None, shuffle=True, solver='adam', tol=0.0001,
+       validation_fraction=0.1, verbose=False, warm_start=False)
+Log Loss Mean: -0.31590
+Log Loss Standard deviation: 0.00264
+Precision Mean: 0.81003
+Precision Standard deviation: 0.00640
+Recall Mean: 0.75961
+Recall Standard deviation: 0.01156
+F-Score Mean: 0.77916
+F-Score Standard deviation: 0.00812
+
+----------------------
+
+MLPClassifier(alpha=1, max_iter=2000),
+
+Model:  MLPClassifier(activation='relu', alpha=1, batch_size='auto', beta_1=0.9,
+       beta_2=0.999, early_stopping=False, epsilon=1e-08,
+       hidden_layer_sizes=(100,), learning_rate='constant',
+       learning_rate_init=0.001, max_iter=2000, momentum=0.9,
+       n_iter_no_change=10, nesterovs_momentum=True, power_t=0.5,
+       random_state=None, shuffle=True, solver='adam', tol=0.0001,
+       validation_fraction=0.1, verbose=False, warm_start=False)
+Log Loss Mean: -0.31595
+Log Loss Standard deviation: 0.00147
+Precision Mean: 0.81100
+Precision Standard deviation: 0.01075
+Recall Mean: 0.75631
+Recall Standard deviation: 0.00810
+F-Score Mean: 0.77697
+F-Score Standard deviation: 0.00291
+
+--------
+
+MLPClassifier(alpha=0.5, max_iter=1000)
+
+Model:  MLPClassifier(activation='relu', alpha=0.5, batch_size='auto', beta_1=0.9,
+       beta_2=0.999, early_stopping=False, epsilon=1e-08,
+       hidden_layer_sizes=(100,), learning_rate='constant',
+       learning_rate_init=0.001, max_iter=1000, momentum=0.9,
+       n_iter_no_change=10, nesterovs_momentum=True, power_t=0.5,
+       random_state=None, shuffle=True, solver='adam', tol=0.0001,
+       validation_fraction=0.1, verbose=False, warm_start=False)
+Log Loss Mean: -0.31088
+Log Loss Standard deviation: 0.00198
+Precision Mean: 0.81717
+Precision Standard deviation: 0.00418
+Recall Mean: 0.75991
+Recall Standard deviation: 0.00565
+F-Score Mean: 0.78181
+F-Score Standard deviation: 0.00325
+
+
+--------
+
+MLPClassifier(alpha=0.04, max_iter=1000)
+
+
+Model:  MLPClassifier(activation='relu', alpha=0.04, batch_size='auto', beta_1=0.9,
+       beta_2=0.999, early_stopping=False, epsilon=1e-08,
+       hidden_layer_sizes=(100,), learning_rate='constant',
+       learning_rate_init=0.001, max_iter=1000, momentum=0.9,
+       n_iter_no_change=10, nesterovs_momentum=True, power_t=0.5,
+       random_state=None, shuffle=True, solver='adam', tol=0.0001,
+       validation_fraction=0.1, verbose=False, warm_start=False)
+Log Loss Mean: -0.31412
+Log Loss Standard deviation: 0.00368
+Precision Mean: 0.80624
+Precision Standard deviation: 0.00340
+Recall Mean: 0.77375
+Recall Standard deviation: 0.00712
+F-Score Mean: 0.78768
+F-Score Standard deviation: 0.00562
+
+
+--------
+MLPClassifier(alpha=0.04, max_iter=1000, hidden_layer_sizes=(100,10))
+
+Model:  MLPClassifier(activation='relu', alpha=0.04, batch_size='auto', beta_1=0.9,
+       beta_2=0.999, early_stopping=False, epsilon=1e-08,
+       hidden_layer_sizes=(100, 10), learning_rate='constant',
+       learning_rate_init=0.001, max_iter=1000, momentum=0.9,
+       n_iter_no_change=10, nesterovs_momentum=True, power_t=0.5,
+       random_state=None, shuffle=True, solver='adam', tol=0.0001,
+       validation_fraction=0.1, verbose=False, warm_start=False)
+Log Loss Mean: -0.36159
+Log Loss Standard deviation: 0.01162
+Precision Mean: 0.78134
+Precision Standard deviation: 0.01288
+Recall Mean: 0.76032
+Recall Standard deviation: 0.01674
+F-Score Mean: 0.76779
+F-Score Standard deviation: 0.00455
+
+
+************************
+
+--------
+AdaBoostClassifier(base_estimator=DecisionTreeClassifier()),
+
+Model:  AdaBoostClassifier(algorithm='SAMME.R',
+          base_estimator=DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=None,
+            max_features=None, max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, presort=False, random_state=None,
+            splitter='best'),
+          learning_rate=1.0, n_estimators=50, random_state=None)
+Log Loss Mean: -1.38917
+Log Loss Standard deviation: 0.66694
+Precision Mean: 0.74871
+Precision Standard deviation: 0.01132
+Recall Mean: 0.73101
+Recall Standard deviation: 0.00594
+F-Score Mean: 0.73859
+F-Score Standard deviation: 0.00574
+
+--------
+
+AdaBoostClassifier(base_estimator=DecisionTreeClassifier(max_depth=20)),
+
+Model:  AdaBoostClassifier(algorithm='SAMME.R',
+          base_estimator=DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=20,
+            max_features=None, max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, presort=False, random_state=None,
+            splitter='best'),
+          learning_rate=1.0, n_estimators=50, random_state=None)
+Log Loss Mean: -0.71078
+Log Loss Standard deviation: 0.04542
+Precision Mean: 0.77174
+Precision Standard deviation: 0.00424
+Recall Mean: 0.74446
+Recall Standard deviation: 0.00344
+F-Score Mean: 0.75616
+F-Score Standard deviation: 0.00300
+
