@@ -142,3 +142,268 @@ Recall Standard deviation: 0.00344
 F-Score Mean: 0.75616
 F-Score Standard deviation: 0.00300
 
+-----------
+Random Forest
+-0.9  0.80612 0.75509 0.77505
+
+--------
+RandomForestClassifier(),
+
+Model:  RandomForestClassifier(bootstrap=True, ccp_alpha=0.0, class_weight=None,
+                       criterion='gini', max_depth=None, max_features='auto',
+                       max_leaf_nodes=None, max_samples=None,
+                       min_impurity_decrease=0.0, min_impurity_split=None,
+                       min_samples_leaf=1, min_samples_split=2,
+                       min_weight_fraction_leaf=0.0, n_estimators=100,
+                       n_jobs=None, oob_score=False, random_state=None,
+                       verbose=0, warm_start=False)
+Log Loss Mean: -0.37880
+Log Loss Standard deviation: 0.01137
+Precision Mean: 0.80178
+Precision Standard deviation: 0.00134
+Recall Mean: 0.76876
+Recall Standard deviation: 0.00061
+F-Score Mean: 0.78288
+F-Score Standard deviation: 0.00039
+
+--------
+RandomForestClassifier(criterion='entropy'),
+
+Model:  RandomForestClassifier(bootstrap=True, ccp_alpha=0.0, class_weight=None,
+                       criterion='entropy', max_depth=None, max_features='auto',
+                       max_leaf_nodes=None, max_samples=None,
+                       min_impurity_decrease=0.0, min_impurity_split=None,
+                       min_samples_leaf=1, min_samples_split=2,
+                       min_weight_fraction_leaf=0.0, n_estimators=100,
+                       n_jobs=None, oob_score=False, random_state=None,
+                       verbose=0, warm_start=False)
+Log Loss Mean: -0.37921
+Log Loss Standard deviation: 0.01462
+Precision Mean: 0.80046
+Precision Standard deviation: 0.00088
+Recall Mean: 0.76784
+Recall Standard deviation: 0.00077
+F-Score Mean: 0.78181
+F-Score Standard deviation: 0.00064
+
+--------
+RandomForestClassifier(criterion='entropy', max_depth=10),
+
+Model:  RandomForestClassifier(bootstrap=True, ccp_alpha=0.0, class_weight=None,
+                       criterion='entropy', max_depth=10, max_features='auto',
+                       max_leaf_nodes=None, max_samples=None,
+                       min_impurity_decrease=0.0, min_impurity_split=None,
+                       min_samples_leaf=1, min_samples_split=2,
+                       min_weight_fraction_leaf=0.0, n_estimators=100,
+                       n_jobs=None, oob_score=False, random_state=None,
+                       verbose=0, warm_start=False)
+Log Loss Mean: -0.31954
+Log Loss Standard deviation: 0.00208
+Precision Mean: 0.83600
+Precision Standard deviation: 0.00816
+Recall Mean: 0.75053
+Recall Standard deviation: 0.00269
+F-Score Mean: 0.77968
+F-Score Standard deviation: 0.00028
+
+--------
+
+RandomForestClassifier(criterion='entropy', n_estimators=200),
+
+Model:  RandomForestClassifier(bootstrap=True, ccp_alpha=0.0, class_weight=None,
+                       criterion='entropy', max_depth=None, max_features='auto',
+                       max_leaf_nodes=None, max_samples=None,
+                       min_impurity_decrease=0.0, min_impurity_split=None,
+                       min_samples_leaf=1, min_samples_split=2,
+                       min_weight_fraction_leaf=0.0, n_estimators=200,
+                       n_jobs=None, oob_score=False, random_state=None,
+                       verbose=0, warm_start=False)
+Log Loss Mean: -0.35042
+Log Loss Standard deviation: 0.00702
+Precision Mean: 0.80150
+Precision Standard deviation: 0.00118
+Recall Mean: 0.76989
+Recall Standard deviation: 0.00036
+F-Score Mean: 0.78350
+F-Score Standard deviation: 0.00061
+
+--------------------------------
+-0.9  0.80612 0.75509 0.77505
+10 : -0.31  0.83297  0.75382  0.78164
+200 : -0.352  0.80148  0.76947  0.78323
+
+RandomForestClassifier(criterion='entropy', max_depth=10),
+RandomForestClassifier(criterion='entropy', max_depth=50),
+RandomForestClassifier(criterion='entropy', max_depth=5),
+RandomForestClassifier(criterion='entropy', n_estimators=200),
+RandomForestClassifier(criterion='entropy', n_estimators=50),    
+RandomForestClassifier(criterion='entropy', n_estimators=300),
+RandomForestClassifier(criterion='entropy', max_depth=10, n_estimators=200),
+--------
+
+Model:  RandomForestClassifier(bootstrap=True, ccp_alpha=0.0, class_weight=None,
+                       criterion='entropy', max_depth=10, max_features='auto',
+                       max_leaf_nodes=None, max_samples=None,
+                       min_impurity_decrease=0.0, min_impurity_split=None,
+                       min_samples_leaf=1, min_samples_split=2,
+                       min_weight_fraction_leaf=0.0, n_estimators=100,
+                       n_jobs=None, oob_score=False, random_state=None,
+                       verbose=0, warm_start=False)
+Log Loss Mean: -0.31936
+Log Loss Standard deviation: 0.00209
+Precision Mean: 0.83297
+Precision Standard deviation: 0.00688
+Recall Mean: 0.75382
+Recall Standard deviation: 0.00107
+F-Score Mean: 0.78164
+F-Score Standard deviation: 0.00152
+
+--------
+
+Model:  RandomForestClassifier(bootstrap=True, ccp_alpha=0.0, class_weight=None,
+                       criterion='entropy', max_depth=50, max_features='auto',
+                       max_leaf_nodes=None, max_samples=None,
+                       min_impurity_decrease=0.0, min_impurity_split=None,
+                       min_samples_leaf=1, min_samples_split=2,
+                       min_weight_fraction_leaf=0.0, n_estimators=100,
+                       n_jobs=None, oob_score=False, random_state=None,
+                       verbose=0, warm_start=False)
+Log Loss Mean: -0.37716
+Log Loss Standard deviation: 0.01049
+Precision Mean: 0.80080
+Precision Standard deviation: 0.00207
+Recall Mean: 0.76958
+Recall Standard deviation: 0.00111
+F-Score Mean: 0.78304
+F-Score Standard deviation: 0.00129
+
+--------
+
+Model:  RandomForestClassifier(bootstrap=True, ccp_alpha=0.0, class_weight=None,
+                       criterion='entropy', max_depth=5, max_features='auto',
+                       max_leaf_nodes=None, max_samples=None,
+                       min_impurity_decrease=0.0, min_impurity_split=None,
+                       min_samples_leaf=1, min_samples_split=2,
+                       min_weight_fraction_leaf=0.0, n_estimators=100,
+                       n_jobs=None, oob_score=False, random_state=None,
+                       verbose=0, warm_start=False)
+Log Loss Mean: -0.36446
+Log Loss Standard deviation: 0.00197
+Precision Mean: 0.84873
+Precision Standard deviation: 0.00619
+Recall Mean: 0.67579
+Recall Standard deviation: 0.00858
+F-Score Mean: 0.70957
+F-Score Standard deviation: 0.00993
+
+--------
+
+Model:  RandomForestClassifier(bootstrap=True, ccp_alpha=0.0, class_weight=None,
+                       criterion='entropy', max_depth=None, max_features='auto',
+                       max_leaf_nodes=None, max_samples=None,
+                       min_impurity_decrease=0.0, min_impurity_split=None,
+                       min_samples_leaf=1, min_samples_split=2,
+                       min_weight_fraction_leaf=0.0, n_estimators=200,
+                       n_jobs=None, oob_score=False, random_state=None,
+                       verbose=0, warm_start=False)
+Log Loss Mean: -0.35215
+Log Loss Standard deviation: 0.00896
+Precision Mean: 0.80148
+Precision Standard deviation: 0.00190
+Recall Mean: 0.76947
+Recall Standard deviation: 0.00094
+F-Score Mean: 0.78323
+F-Score Standard deviation: 0.00130
+
+--------
+
+Model:  RandomForestClassifier(bootstrap=True, ccp_alpha=0.0, class_weight=None,
+                       criterion='entropy', max_depth=None, max_features='auto',
+                       max_leaf_nodes=None, max_samples=None,
+                       min_impurity_decrease=0.0, min_impurity_split=None,
+                       min_samples_leaf=1, min_samples_split=2,
+                       min_weight_fraction_leaf=0.0, n_estimators=50,
+                       n_jobs=None, oob_score=False, random_state=None,
+                       verbose=0, warm_start=False)
+Log Loss Mean: -0.45244
+Log Loss Standard deviation: 0.01769
+Precision Mean: 0.80080
+Precision Standard deviation: 0.00131
+Recall Mean: 0.76735
+Recall Standard deviation: 0.00182
+F-Score Mean: 0.78161
+F-Score Standard deviation: 0.00138
+
+--------
+
+Model:  RandomForestClassifier(bootstrap=True, ccp_alpha=0.0, class_weight=None,
+                       criterion='entropy', max_depth=None, max_features='auto',
+                       max_leaf_nodes=None, max_samples=None,
+                       min_impurity_decrease=0.0, min_impurity_split=None,
+                       min_samples_leaf=1, min_samples_split=2,
+                       min_weight_fraction_leaf=0.0, n_estimators=300,
+                       n_jobs=None, oob_score=False, random_state=None,
+                       verbose=0, warm_start=False)
+Log Loss Mean: -0.34465
+Log Loss Standard deviation: 0.01155
+Precision Mean: 0.80119
+Precision Standard deviation: 0.00172
+Recall Mean: 0.76907
+Recall Standard deviation: 0.00179
+F-Score Mean: 0.78286
+F-Score Standard deviation: 0.00175
+
+--------
+
+Model:  RandomForestClassifier(bootstrap=True, ccp_alpha=0.0, class_weight=None,
+                       criterion='entropy', max_depth=10, max_features='auto',
+                       max_leaf_nodes=None, max_samples=None,
+                       min_impurity_decrease=0.0, min_impurity_split=None,
+                       min_samples_leaf=1, min_samples_split=2,
+                       min_weight_fraction_leaf=0.0, n_estimators=200,
+                       n_jobs=None, oob_score=False, random_state=None,
+                       verbose=0, warm_start=False)
+Log Loss Mean: -0.31909
+Log Loss Standard deviation: 0.00208
+Precision Mean: 0.83488
+Precision Standard deviation: 0.00765
+Recall Mean: 0.75090
+Recall Standard deviation: 0.00374
+F-Score Mean: 0.77969
+F-Score Standard deviation: 0.00126
+
+
+RandomForestClassifier(),
+RandomForestClassifier(criterion='entropy', max_depth=10),
+
+MLPClassifier(alpha=0.4, max_iter=1000),
+MLPClassifier(alpha=1, max_iter=1000),
+
+
+***********
+Testing pipeline
+
+Random forest (max:10): 
+
+Log Loss Mean: -0.31943
+Precision Mean: 0.83501
+Recall Mean: 0.75198
+F-Score Mean: 0.78064
+
+Random forest (max:10) + label_encoder educ: 
+Log Loss Mean: -0.31990
+Precision Mean: 0.83116
+Recall Mean: 0.75228
+F-Score Mean: 0.77983
+
+Random forest (max:10) + label_encoder educ + workclass: 
+Log Loss Mean: -0.31917
+Precision Mean: 0.83392
+Recall Mean: 0.74959
+F-Score Mean: 0.77846
+
+Random forest (max:10) + mean on capital loss/gain: 
+Log Loss Mean: -0.31979
+Precision Mean: 0.83478
+Recall Mean: 0.74912
+F-Score Mean: 0.77823
